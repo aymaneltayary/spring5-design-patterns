@@ -1,0 +1,5 @@
+com\springDesignPattern\chapter10\config\ApplicationConfig.class
+com\springDesignPattern\chapter10\config\WebMvcConfig.class
+com\springDesignPattern\chapter10\controller\DemoController.class
+com\springDesignPattern\chapter10\CustomWebApplicationInitializer.class
+com\springDesignPattern\chapter10\controller\model\DemoModel.class

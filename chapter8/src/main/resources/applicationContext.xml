@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   		http://www.springframework.org/schema/beans/spring-beans.xsd
+	   		http://www.springframework.org/schema/context
+	   		http://www.springframework.org/schema/context/spring-context.xsd 
+	   		http://www.springframework.org/schema/aop
+	   		http://www.springframework.org/schema/aop/spring-aop.xsd
+	   		http://www.springframework.org/schema/tx
+        	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<tx:annotation-driven />
+	<context:annotation-config />
+	<context:property-placeholder
+		location="classpath:config.properties" />
+
+	<bean id="actorService"
+		class="com.springDesignPattern.chapter8.service.ActorService">
+	</bean>
+	<bean id="JdbcActorRepoImpl"
+		class="com.springDesignPattern.chapter8.config.ActorRepositoryFactoryBean">
+		<property name="impl" value="${repo.type}" />
+
+	</bean>
+	<!-- DB configuration is here -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName" value="${db.mysql.driver}" />
+		<property name="url" value="${db.mysql.url}" />
+		<property name="username" value="${db.mysql.user}" />
+		<property name="password" value="${db.mysql.password}" />
+	</bean>
+
+	<bean id="JdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg ref="dataSource" />
+
+	</bean>
+
+	<bean id="emf"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean
+				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+
+			</props>
+		</property>
+		<property name="packagesToScan"
+			value="com.springDesignPattern.chapter8.entity" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="emf" />
+	</bean>
+
+
+
+</beans>
